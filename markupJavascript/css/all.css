@@ -1,0 +1,128 @@
+body {
+	margin: 0;
+	color: #333;
+	background: #ececec;
+	font: 15px/17px arial, helvetica, sans-serif;
+}
+form, fieldset {
+	margin: 0;
+	padding: 0;
+	border-style: none;
+}
+input, select, textarea {
+	vertical-align: middle;
+	font: 100% arial, sans-serif;
+	outline:none;
+}
+#content{
+	margin:46px auto 0;
+	width:627px;
+	background:#fff;
+	border:5px solid #ccc;
+	border-radius:11px;
+	-webkit-border-radius: 11px;
+	-moz-border-radius: 11px;
+	-webkit-box-shadow: 0px 0px 5px 5px rgba(219,219,219,1);
+	-moz-box-shadow: 0px 0px 5px 5px rgba(219,219,219,1);
+	box-shadow: 0px 0px 5px 5px rgba(219,219,219,1);
+	padding:31px 0 0;
+}
+.application-form{overflow:hidden;}
+.application-form .field-row{
+	overflow:hidden;
+	margin:0 0 13px;
+	padding:0 30px;
+}
+.application-form .label-text{
+	float:left;
+	width:199px;
+	text-align:right;
+	padding:11px 0 0;
+}
+.application-form .required{
+	color:#dd5f30;
+	display:inline-block;
+	margin:0 0 0 5px;
+}
+.application-form .field-control{
+	float:left;
+	margin:0 0 0 10px;
+	background:#fff;
+	border:2px solid #c0c0c0;
+	padding:3px 5px;
+	width:216px;
+	border-radius:3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+}
+.application-form .text-input,
+.application-form select,
+.application-form textarea{
+	width:100%;
+	line-height:28px;
+	border:0;
+	padding:0;
+}
+.application-form .text-input,
+.application-form select{
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+}
+.application-form select{
+	color:#555;
+	padding:2px 0 3px;
+}
+.application-form .col{
+	float:left;
+	margin:0 0 2px 10px;
+	padding:12px 0 0;
+}
+.application-form .field-label{
+	line-height:15px;
+	font-size:13px;
+	vertical-align:top;
+}
+.application-form .field-item{
+	overflow:hidden;
+	margin:0 0 5px;
+}
+.application-form .radio{
+	float:left;
+	margin:0 5px 0 0;
+	padding:0;
+}
+.application-form textarea{
+	min-width:100%;
+	max-width:100%;
+	overflow:auto;
+	min-height:36px;
+	line-height:17px;
+}
+.application-form .btn-block{
+	overflow:hidden;
+	border-top:1px solid #ddd;
+	padding: 18px 39px;
+	margin: 22px 0 0;
+}
+.application-form .btn-submit{
+	cursor:pointer;
+	float:right;
+	margin:0;
+	font-weight:bold;
+	padding: 8px 23px 10px 21px;
+	background:url(../images/bg-submit.gif) repeat-x;
+	border:0;
+	color:#fff;
+	font-size:15px;
+	line-height:17px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius:  3px;
+	border-radius:  3px;
+	text-shadow:0 -2px 0 #617e1b;
+	height:37px;
+}
+.application-form .btn-submit:hover{
+	background:#9fc434;
+	text-shadow:0 0 0 #617e1b;
+}
