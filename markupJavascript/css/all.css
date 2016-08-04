@@ -16,7 +16,9 @@ input, select, textarea {
 }
 #content{
 	margin:46px auto 0;
-	width:627px;
+	width:50%;
+	max-width: 700px;
+	min-width: 400px;
 	background:#fff;
 	border:5px solid #ccc;
 	border-radius:11px;
@@ -35,7 +37,7 @@ input, select, textarea {
 }
 .application-form .label-text{
 	float:left;
-	width:199px;
+	width:30%;
 	text-align:right;
 	padding:11px 0 0;
 }
@@ -50,7 +52,7 @@ input, select, textarea {
 	background:#fff;
 	border:2px solid #c0c0c0;
 	padding:3px 5px;
-	width:216px;
+	width:50%;
 	border-radius:3px;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
