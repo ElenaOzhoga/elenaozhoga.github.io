@@ -12,30 +12,18 @@
 				var nameValue = formContainer.questions[i].name;
 				var optionsValue = formContainer.questions[i].options;
 				if (labelValue !== undefined) {
-					fieldRow.innerHTML += '<div class="label-text"><label>' + labelValue + '</label></div>';
-					if (nameValue) {
-						container.getElementsByClassName('label-text')[i].getElementsByTagName('label')[0].setAttribute("for", nameValue);
-					}
+					fieldRow.innerHTML += '<div class="label-text"><label' + (nameValue ? ' for="' + nameValue + '"' : '') + '>' + labelValue + '</label></div>';
 				}
 				if (formContainer.questions[i].required === true) {
 					container.getElementsByClassName('label-text')[i].innerHTML += '<span class="required">*</span>';
 				}
 				if (fieldType !== undefined) {
 					if (fieldType === "Text") {
-						fieldRow.innerHTML += '<div class="field-control"><input type="text" class="text-input"/></div>';
-						var textField = fieldRow.getElementsByClassName('text-input')[0];
-						if (nameValue) {
-							textField.setAttribute("id", nameValue);
-							textField.setAttribute("name", nameValue);
-						}
+						fieldRow.innerHTML += '<div class="field-control"><input type="text" class="text-input"' + (nameValue ? ' id="' + nameValue + '"' : '') + (nameValue ? ' name="' + nameValue + '"' : '') + '/></div>';
 					}
 					if (fieldType === "Select") {
-						fieldRow.innerHTML += '<div class="field-control"><select><option value="">-please select-</option></select></div>';
+						fieldRow.innerHTML += '<div class="field-control"><select' + (nameValue ? ' id="' + nameValue + '"' : '') + (nameValue ? ' name="' + nameValue + '"' : '') + '><option value="">-please select-</option></select></div>';
 						var selectField = fieldRow.getElementsByTagName('select')[0];
-						if (nameValue) {
-							selectField.setAttribute("id", nameValue);
-							selectField.setAttribute("name", nameValue);
-						}
 						if (optionsValue !== undefined) {
 							for (var j = 0; j < optionsValue.length; j++) {
 								selectField.innerHTML += '<option value="' + optionsValue[j].value + '">' + optionsValue[j].label + '</option>';
@@ -44,24 +32,15 @@
 					}
 					if (fieldType === "Radio") {
 						fieldRow.innerHTML += '<div class="col"></div>';
+						var columnBlock = fieldRow.getElementsByClassName('col')[0];
 						if (optionsValue !== undefined) {
 							for (var j = 0; j < optionsValue.length; j++) {
-								fieldRow.getElementsByClassName('col')[0].innerHTML += '<div class="field-item"><input type="radio" value ="' + optionsValue[j].value +'" class="radio"/><label for="' + formContainer.questions[i].name + j +'" class="field-label">' + optionsValue[j].label + '</label></div>';
-								var radioField = container.getElementsByClassName('field-item')[j].getElementsByClassName('radio')[0];
-								if (nameValue) {
-									radioField.setAttribute("id", nameValue + j);
-									radioField.setAttribute("name", nameValue);
-								}
+								columnBlock.innerHTML += '<div class="field-item"><input' + (nameValue ? ' id="' + nameValue + j + '"' : '') + (nameValue ? ' name="' + nameValue + '"' : '') + ' type="radio" value ="' + optionsValue[j].value +'" class="radio"/><label' + (nameValue ? ' for="' + nameValue + j + '"' : '') + 'class="field-label">' + optionsValue[j].label + '</label></div>';
 							}
 						}
 					}
 					if (fieldType === "Textarea") {
-						fieldRow.innerHTML += '<div class="field-control"><textarea cols="3" rows="3"></textarea></div>';
-						var commentField = fieldRow.getElementsByTagName('textarea')[0];
-						if (nameValue) {
-							commentField.setAttribute("id", nameValue);
-							commentField.setAttribute("name", nameValue);
-						}
+						fieldRow.innerHTML += '<div class="field-control"><textarea cols="3" rows="3"' + (nameValue ? ' id="' + nameValue + '"' : '') + (nameValue ? ' name="' + nameValue + '"' : '') + '></textarea></div>';
 					}
 				}
 			}
