@@ -2,40 +2,47 @@ function displayDomContent (id, contentVar) {
 	document.getElementById(id).innerHTML = contentVar;
 }
 
-function renderDivStart (className) {
-	return '<div class=' + className + '>';
-}
-
-function renderEndDiv () {
-	return '</div>';
-}
-
-function renderLabel (label, name) {
-	return '<label' + (name ? ' for="' + name + '"' : '') + '>' + label + '</label>';
+function renderDiv (className, content) {
+	return '<div class=' + className + '>' + content + '</div>';
 }
 
 function renderRequired () {
 	return '<span class="required">*</span>';
 }
 
+function renderLabel (label, name, required) {
+	var labelText = '';
+	labelText +=  '<label' + (name ? ' for="' + name + '"' : '') + '>' + label + '</label>';
+	if (required === true) {
+		labelText += renderRequired ();
+	}
+	return labelText;
+}
+
 function renderTextField (name) {
 	return '<input type="text" class="text-input"' + (name ? ' id="' + name + '"' : '') + (name ? ' name="' + name + '"' : '') + '/>';
 }
 
-function renderSelectStart (name) {
-	return '<select' + (name ? ' id="' + name + '"' : '') + (name ? ' name="' + name + '"' : '') + '><option value="">-please select-</option>';
+function renderSelect (name, options) {
+	var select = '';
+	select += '<select' + (name ? ' id="' + name + '"' : '') + (name ? ' name="' + name + '"' : '') + '><option value="">-please select-</option>';
+	if (options) {
+		for (var j = 0; j < options.length; j++) {
+			select += '<option value="' + options[j].value + '">' + options[j].label + '</option>';
+		}
+	}
+	select += '</select>';
+	return select;
 }
 
-function renderSelectEnd () {
-	return '</select>';
-}
-
-function renderSelectOptions (optVal, optLabel) {
-	return '<option value="' + optVal + '">' + optLabel + '</option>';
-}
-
-function renderRadioButton (name, optVal, optLabel, index) {
-	return '<input' + (name ? ' id="' + name + index + '"' : '') + (name ? ' name="' + name + '"' : '') + ' type="radio" value ="' + optVal +'" class="radio"/><label' + (name ? ' for="' + name + index + '"' : '') + 'class="field-label">' + optLabel + '</label>';
+function renderRadioButton (name, options) {
+	var radio = '';
+	if (options) {
+		for (var j = 0; j < options.length; j++) {
+			radio += '<div class="field-item">' + '<input' + (name ? ' id="' + name + j + '"' : '') + (name ? ' name="' + name + '"' : '') + ' type="radio" value ="' + options[j].value +'" class="radio"/><label' + (name ? ' for="' + name + j + '"' : '') + 'class="field-label">' + options[j].label + '</label>' + '</div>';
+		}
+	}
+	return radio;
 }
 
 function renderTextArea (name) {
@@ -49,41 +56,25 @@ function renderHTML (question) {
 	var required = question.required;
 	var field = question.field_type;
 	var options = question.options;
-	content += renderDivStart ("field-row");
+	content += '<div class="field-row">';
 	if (label) {
-		content += renderDivStart ("label-text") + renderLabel (label, name);
-		if (required === true) {
-			content += renderRequired ();
-		}
-		content += renderEndDiv ();
+		content += renderDiv ("label-text", renderLabel (label, name, required));
 	}
 	if (field) {
 		if (field === "Text") {
-			content += renderDivStart ("field-control") + renderTextField (name) + renderEndDiv ();
+			content += renderDiv ("field-control", renderTextField (name));
 		}
 		if (field === "Select") {
-			content += renderDivStart ("field-control") + renderSelectStart (name);
-			if (options) {
-				for (var j = 0; j < options.length; j++) {
-					content += renderSelectOptions (options[j].value, options[j].label);
-				}
-			}
-			content += renderSelectEnd () + renderEndDiv ();
+			content += renderDiv ("field-control", renderSelect (name, options));
 		}
 		if (field === "Radio") {
-			content += renderDivStart ("col");
-			if (options) {
-				for (var j = 0; j < options.length; j++) {
-					content += renderDivStart ("field-item") + renderRadioButton (name, options[j].value, options[j].label, j) + renderEndDiv ();
-				}
-			}
-			content += renderEndDiv ();
+			content += renderDiv ("col", renderRadioButton (name, options));
 		}
 		if (field === "Textarea") {
-			content += renderDivStart ("field-control") + renderTextArea (name) + renderEndDiv ();
+			content += renderDiv ("field-control", renderTextArea (name));
 		}
 	}
-	content += renderEndDiv ();
+	content += '</div>';
 	return content;
 }
 
@@ -94,7 +85,7 @@ function jsonQuestions (dataForm) {
 		for (var i = 0; i < dataForm.questions.length; i++) {
 			domContent += renderHTML (dataForm.questions[i]);
 		}
-		domContent += renderDivStart ("btn-block") + '<input type="submit" value="Submit" class="btn-submit"/>' + renderEndDiv () + '</fieldset></form>';
+		domContent += renderDiv ("btn-block", '<input type="submit" value="Submit" class="btn-submit"/>') + '</fieldset></form>';
 		displayDomContent ('content', domContent);
 	}
 }
