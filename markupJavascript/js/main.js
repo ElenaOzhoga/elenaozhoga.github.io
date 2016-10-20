@@ -2,17 +2,31 @@ function displayDomContent (id, contentVar) {
 	document.getElementById(id).innerHTML = contentVar;
 }
 
+function renderAttribute (obj) {
+	var attribute = '';
+	for (var key in obj) {
+		attribute += (key === 'classUpd' ? ' class' : ' ' + key) + '="' + obj[key] + '"';
+	}
+	return attribute;
+}
+
 function renderDiv (className, content) {
-	return '<div class=' + className + '>' + content + '</div>';
+	return '<div' + renderAttribute ({
+			classUpd: className
+		}) + '>' + content + '</div>';
 }
 
 function renderRequired () {
-	return '<span class="required">*</span>';
+	return '<span' + renderAttribute ({
+			classUpd: 'required'
+		}) + '>*</span>';
 }
 
 function renderLabel (label, name, required) {
 	var labelText = '';
-	labelText +=  '<label' + (name ? ' for="' + name + '"' : '') + '>' + label + '</label>';
+	labelText +=  '<label' + renderAttribute ({
+		for: name
+	}) + '>' + label + '</label>';
 	if (required === true) {
 		labelText += renderRequired ();
 	}
@@ -20,15 +34,27 @@ function renderLabel (label, name, required) {
 }
 
 function renderTextField (name) {
-	return '<input type="text" class="text-input"' + (name ? ' id="' + name + '"' : '') + (name ? ' name="' + name + '"' : '') + '/>';
+	return '<input' + renderAttribute ({
+			type: 'text',
+			classUpd: 'text-input',
+			id: name,
+			name: name
+		})  + '/>';
 }
 
 function renderSelect (name, options) {
 	var select = '';
-	select += '<select' + (name ? ' id="' + name + '"' : '') + (name ? ' name="' + name + '"' : '') + '><option value="">-please select-</option>';
+	select += '<select' + renderAttribute ({
+		id: name,
+		name: name
+	}) + '><option' + renderAttribute ({
+		value: ''
+	}) + '>-please select-</option>';
 	if (options) {
 		for (var j = 0; j < options.length; j++) {
-			select += '<option value="' + options[j].value + '">' + options[j].label + '</option>';
+			select += '<option' + renderAttribute ({
+				value: options[j].value
+			}) + '>' + options[j].label + '</option>';
 		}
 	}
 	select += '</select>';
@@ -37,16 +63,36 @@ function renderSelect (name, options) {
 
 function renderRadioButton (name, options) {
 	var radio = '';
+
 	if (options) {
+		var index;
 		for (var j = 0; j < options.length; j++) {
-			radio += '<div class="field-item">' + '<input' + (name ? ' id="' + name + j + '"' : '') + (name ? ' name="' + name + '"' : '') + ' type="radio" value ="' + options[j].value +'" class="radio"/><label' + (name ? ' for="' + name + j + '"' : '') + 'class="field-label">' + options[j].label + '</label>' + '</div>';
+			index = j;
+			radio += '<div' + renderAttribute ({
+				classUpd: 'field-item'
+			}) + '>' + '<input' + renderAttribute ({
+				type: 'radio',
+				value: options[j].value,
+				classUpd: 'radio',
+				id: name + j,
+				name: name
+			}) + '/><label' + renderAttribute ({
+				for: name + j
+			}) + renderAttribute ({
+				classUpd: 'field-label'
+			}) + '>' + options[j].label + '</label></div>';
 		}
 	}
 	return radio;
 }
 
 function renderTextArea (name) {
-	return '<textarea cols="3" rows="3"' + (name ? ' id="' + name + '"' : '') + (name ? ' name="' + name + '"' : '') + '></textarea>';
+	return '<textarea' + renderAttribute ({
+			cols: '3',
+			rows: '3',
+			id: name,
+			name: name
+		}) + '></textarea>';
 }
 
 function renderHTML (question) {
@@ -56,7 +102,9 @@ function renderHTML (question) {
 	var required = question.required;
 	var field = question.field_type;
 	var options = question.options;
-	content += '<div class="field-row">';
+	content += '<div' + renderAttribute ({
+		classUpd: 'field-row'
+	}) + '>';
 	if (label) {
 		content += renderDiv ("label-text", renderLabel (label, name, required));
 	}
@@ -80,14 +128,25 @@ function renderHTML (question) {
 
 function jsonQuestions (dataForm) {
 	var domContent = '';
-	domContent += '<form class="application-form" action="#"><fieldset>';
+	domContent += '<form' + renderAttribute ({
+		classUpd: 'application-form',
+		action: '#'
+	}) + '><fieldset>';
 	if (dataForm.questions) {
 		for (var i = 0; i < dataForm.questions.length; i++) {
 			domContent += renderHTML (dataForm.questions[i]);
 		}
-		domContent += renderDiv ("btn-block", '<input type="submit" value="Submit" class="btn-submit"/>') + '</fieldset></form>';
+		domContent += renderDiv ("btn-block", '<input' + renderAttribute ({
+			type: 'submit',
+			value: 'Submit',
+			classUpd: 'btn-submit'
+		}) + '/>') + '</fieldset></form>';
 		displayDomContent ('content', domContent);
 	}
+	renderAttribute ({
+		classUpd: 'application-form',
+		action: '#'
+	});
 }
 
 (function () {
