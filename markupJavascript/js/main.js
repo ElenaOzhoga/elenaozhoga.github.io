@@ -2,151 +2,200 @@ function displayDomContent (id, contentVar) {
 	document.getElementById(id).innerHTML = contentVar;
 }
 
-function renderAttribute (obj) {
-	var attribute = '';
+function renderAttributeWithHtmlTag (obj) {
+	var tagWithAttributes = '';
 	for (var key in obj) {
-		attribute += (key === 'classUpd' ? ' class' : ' ' + key) + '="' + obj[key] + '"';
-	}
-	return attribute;
-}
-
-function renderDiv (className, content) {
-	return '<div' + renderAttribute ({
-			classUpd: className
-		}) + '>' + content + '</div>';
-}
-
-function renderRequired () {
-	return '<span' + renderAttribute ({
-			classUpd: 'required'
-		}) + '>*</span>';
-}
-
-function renderLabel (label, name, required) {
-	var labelText = '';
-	labelText +=  '<label' + renderAttribute ({
-		for: name
-	}) + '>' + label + '</label>';
-	if (required === true) {
-		labelText += renderRequired ();
-	}
-	return labelText;
-}
-
-function renderTextField (name) {
-	return '<input' + renderAttribute ({
-			type: 'text',
-			classUpd: 'text-input',
-			id: name,
-			name: name
-		})  + '/>';
-}
-
-function renderSelect (name, options) {
-	var select = '';
-	select += '<select' + renderAttribute ({
-		id: name,
-		name: name
-	}) + '><option' + renderAttribute ({
-		value: ''
-	}) + '>-please select-</option>';
-	if (options) {
-		for (var j = 0; j < options.length; j++) {
-			select += '<option' + renderAttribute ({
-				value: options[j].value
-			}) + '>' + options[j].label + '</option>';
+		tagWithAttributes += '<' + key;
+		for (var keyInner in obj[key]) {
+			tagWithAttributes += (keyInner !== 'tagContent' ? (keyInner === 'classUpd' ? ' class' : ' ' + keyInner) + '="' + obj[key][keyInner] + '"' : '');
+		}
+		tagWithAttributes += (key === 'input' ? '/>' : '>');
+		for (var keyInner in obj[key]) {
+			tagWithAttributes += (keyInner === 'tagContent' ? obj[key][keyInner] : '');
 		}
 	}
-	select += '</select>';
+	return tagWithAttributes;
+}
+
+function renderRequired (required) {
+	var spanReq = '';
+	if (required === true) {
+		spanReq += renderAttributeWithHtmlTag ({
+			span: {
+				classUpd: 'required',
+				tagContent: '*'
+			},
+			'/span': {}
+		});
+	}
+	return spanReq;
+}
+
+function renderSelectOpt (options) {
+	var select = '';
+	if (options) {
+		for (var j = 0; j < options.length; j++) {
+			select += renderAttributeWithHtmlTag ({
+				'option': {
+					value: options[j].value,
+					tagContent: options[j].label
+				},
+				'/option': {}
+			});
+		}
+	}
 	return select;
 }
 
-function renderRadioButton (name, options) {
+function renderRadioOpt (name, options) {
 	var radio = '';
-
 	if (options) {
 		var index;
 		for (var j = 0; j < options.length; j++) {
 			index = j;
-			radio += '<div' + renderAttribute ({
-				classUpd: 'field-item'
-			}) + '>' + '<input' + renderAttribute ({
-				type: 'radio',
-				value: options[j].value,
-				classUpd: 'radio',
-				id: name + j,
-				name: name
-			}) + '/><label' + renderAttribute ({
-				for: name + j
-			}) + renderAttribute ({
-				classUpd: 'field-label'
-			}) + '>' + options[j].label + '</label></div>';
+			radio += renderAttributeWithHtmlTag ({
+				div: {
+					classUpd: 'field-item'
+				},
+				input: {
+					type: 'radio',
+					value: options[j].value,
+					classUpd: 'radio',
+					id: name + j,
+					name: name
+				},
+				label: {
+					for: name + j,
+					classUpd: 'field-label',
+					tagContent: options[j].label
+				},
+				'/label': {},
+				'/div': {}
+			});
 		}
 	}
 	return radio;
 }
 
-function renderTextArea (name) {
-	return '<textarea' + renderAttribute ({
-			cols: '3',
-			rows: '3',
-			id: name,
-			name: name
-		}) + '></textarea>';
-}
-
 function renderHTML (question) {
 	var content = '';
-	var label = question.label;
+	var labelQ = question.label;
 	var name = question.name;
 	var required = question.required;
 	var field = question.field_type;
 	var options = question.options;
-	content += '<div' + renderAttribute ({
-		classUpd: 'field-row'
-	}) + '>';
-	if (label) {
-		content += renderDiv ("label-text", renderLabel (label, name, required));
+	content += renderAttributeWithHtmlTag ({
+		div: {
+			classUpd: 'field-row'
+		}
+	});
+	if (labelQ) {
+		content += renderAttributeWithHtmlTag ({
+			div: {
+				classUpd: 'label-text'
+			},
+			label: {
+				for: name,
+				tagContent: labelQ
+			},
+			'/label': {}
+		}) + renderRequired (required) + renderAttributeWithHtmlTag ({
+			'/div': {}
+		});
 	}
 	if (field) {
 		if (field === "Text") {
-			content += renderDiv ("field-control", renderTextField (name));
+			content += renderAttributeWithHtmlTag ({
+				div: {
+					classUpd: 'field-control'
+				},
+				input: {
+					type: 'text',
+					classUpd: 'text-input',
+					id: name,
+					name: name
+				},
+				'/div': {}
+			});
 		}
 		if (field === "Select") {
-			content += renderDiv ("field-control", renderSelect (name, options));
+			content += renderAttributeWithHtmlTag ({
+				div: {
+					classUpd: 'field-control'
+				},
+				select: {
+					id: name,
+					name: name
+				},
+				option: {
+					value: '',
+					tagContent: '-please select-'
+				},
+				'/option': {}
+			}) + renderSelectOpt (options) + renderAttributeWithHtmlTag ({
+				'/select': {},
+				'/div': {}
+			});
 		}
 		if (field === "Radio") {
-			content += renderDiv ("col", renderRadioButton (name, options));
+			content += renderAttributeWithHtmlTag ({
+				div: {
+					classUpd: 'col'
+				}
+			}) + renderRadioOpt (name, options) + renderAttributeWithHtmlTag ({
+				'/div': {}
+			});
 		}
 		if (field === "Textarea") {
-			content += renderDiv ("field-control", renderTextArea (name));
+			content += renderAttributeWithHtmlTag ({
+				div: {
+					classUpd: 'field-control'
+				},
+				textarea: {
+					cols: '3',
+					rows: '3',
+					id: name,
+					name: name
+				},
+				'/textarea': {},
+				'/div': {}
+			});
 		}
 	}
-	content += '</div>';
+	content += renderAttributeWithHtmlTag ({
+		'/div': {}
+	});
 	return content;
 }
 
 function jsonQuestions (dataForm) {
 	var domContent = '';
-	domContent += '<form' + renderAttribute ({
-		classUpd: 'application-form',
-		action: '#'
-	}) + '><fieldset>';
+	domContent += renderAttributeWithHtmlTag ({
+		form: {
+			classUpd: 'application-form',
+			action: '#'
+		},
+		fieldset: {}
+	});
 	if (dataForm.questions) {
 		for (var i = 0; i < dataForm.questions.length; i++) {
 			domContent += renderHTML (dataForm.questions[i]);
 		}
-		domContent += renderDiv ("btn-block", '<input' + renderAttribute ({
-			type: 'submit',
-			value: 'Submit',
-			classUpd: 'btn-submit'
-		}) + '/>') + '</fieldset></form>';
+		domContent += renderAttributeWithHtmlTag ({
+			div: {
+				classUpd: 'btn-block'
+			},
+			input: {
+				type: 'submit',
+				value: 'Submit',
+				classUpd: 'btn-submit'
+			},
+			'/div': {},
+			'/fieldset': {},
+			'/form': {}
+		});
 		displayDomContent ('content', domContent);
 	}
-	renderAttribute ({
-		classUpd: 'application-form',
-		action: '#'
-	});
 }
 
 (function () {

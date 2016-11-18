@@ -1,0 +1,5 @@
+1. Now dynamic select options, radio button options and required spans are generated in separate function. Is it better to move them to 
+renderAttributeWithHtmlTag function?
+2. I don't like this loop: 
+for (var keyInner in obj[key]) { 
+in renderAttributeWithHtmlTag function is used twice. Should I modify renderAttributeWithHtmlTag function to avoid this?
