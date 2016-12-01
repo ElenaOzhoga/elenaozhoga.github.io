@@ -2,31 +2,24 @@ function displayDomContent (id, contentVar) {
 	document.getElementById(id).innerHTML = contentVar;
 }
 
-function renderAttributeWithHtmlTag (obj) {
+function renderAttributeWithHtmlTag (tagName, obj, tagContent) {
 	var tagWithAttributes = '';
+	tagWithAttributes += '<' + tagName;
 	for (var key in obj) {
-		tagWithAttributes += '<' + key;
-		for (var keyInner in obj[key]) {
-			tagWithAttributes += (keyInner !== 'tagContent' ? (keyInner === 'classUpd' ? ' class' : ' ' + keyInner) + '="' + obj[key][keyInner] + '"' : '');
-		}
-		tagWithAttributes += (key === 'input' ? '/>' : '>');
-		for (var keyInner in obj[key]) {
-			tagWithAttributes += (keyInner === 'tagContent' ? obj[key][keyInner] : '');
-		}
+		tagWithAttributes += (key === 'className' ? ' class' : ' ' + key) + '="' + obj[key] + '"';
 	}
+	tagWithAttributes += (tagName === 'input' ? '/>' : '>');
+	tagWithAttributes += tagContent;
+	tagWithAttributes += (tagName === 'input' ? '' : '</' + tagName + '>');
 	return tagWithAttributes;
 }
 
 function renderRequired (required) {
 	var spanReq = '';
 	if (required === true) {
-		spanReq += renderAttributeWithHtmlTag ({
-			span: {
-				classUpd: 'required',
-				tagContent: '*'
-			},
-			'/span': {}
-		});
+		spanReq += renderAttributeWithHtmlTag ('span', {
+			className: 'required'
+		}, '*');
 	}
 	return spanReq;
 }
@@ -35,13 +28,9 @@ function renderSelectOpt (options) {
 	var select = '';
 	if (options) {
 		for (var j = 0; j < options.length; j++) {
-			select += renderAttributeWithHtmlTag ({
-				'option': {
-					value: options[j].value,
-					tagContent: options[j].label
-				},
-				'/option': {}
-			});
+			select += renderAttributeWithHtmlTag ('option', {
+				value: options[j].value
+			}, options[j].label);
 		}
 	}
 	return select;
@@ -53,25 +42,18 @@ function renderRadioOpt (name, options) {
 		var index;
 		for (var j = 0; j < options.length; j++) {
 			index = j;
-			radio += renderAttributeWithHtmlTag ({
-				div: {
-					classUpd: 'field-item'
-				},
-				input: {
-					type: 'radio',
-					value: options[j].value,
-					classUpd: 'radio',
-					id: name + j,
-					name: name
-				},
-				label: {
-					for: name + j,
-					classUpd: 'field-label',
-					tagContent: options[j].label
-				},
-				'/label': {},
-				'/div': {}
-			});
+			radio += renderAttributeWithHtmlTag ('div', {
+				className: 'field-item'
+			}, renderAttributeWithHtmlTag ('input', {
+				type: 'radio',
+				value: options[j].value,
+				className: 'radio',
+				id: name + j,
+				name: name
+			}, renderAttributeWithHtmlTag ('label', {
+				for: name + j,
+				className: 'field-label'
+			}, options[j].label)));
 		}
 	}
 	return radio;
@@ -79,121 +61,83 @@ function renderRadioOpt (name, options) {
 
 function renderHTML (question) {
 	var content = '';
+	var innerContent = '';
 	var labelQ = question.label;
 	var name = question.name;
 	var required = question.required;
 	var field = question.field_type;
 	var options = question.options;
-	content += renderAttributeWithHtmlTag ({
-		div: {
-			classUpd: 'field-row'
-		}
-	});
 	if (labelQ) {
-		content += renderAttributeWithHtmlTag ({
-			div: {
-				classUpd: 'label-text'
-			},
-			label: {
-				for: name,
-				tagContent: labelQ
-			},
-			'/label': {}
-		}) + renderRequired (required) + renderAttributeWithHtmlTag ({
-			'/div': {}
-		});
+		innerContent += renderAttributeWithHtmlTag ('div', {
+			className: 'label-text'
+		}, renderAttributeWithHtmlTag ('label', {
+			for: name
+		}, labelQ) + renderRequired (required));
 	}
 	if (field) {
 		if (field === "Text") {
-			content += renderAttributeWithHtmlTag ({
-				div: {
-					classUpd: 'field-control'
-				},
-				input: {
-					type: 'text',
-					classUpd: 'text-input',
-					id: name,
-					name: name
-				},
-				'/div': {}
-			});
+			innerContent += renderAttributeWithHtmlTag ('div', {
+				className: 'field-control'
+			}, renderAttributeWithHtmlTag ('input', {
+				type: 'text',
+				className: 'text-input',
+				id: name,
+				name: name
+			}, ''));
 		}
 		if (field === "Select") {
-			content += renderAttributeWithHtmlTag ({
-				div: {
-					classUpd: 'field-control'
-				},
-				select: {
-					id: name,
-					name: name
-				},
-				option: {
-					value: '',
-					tagContent: '-please select-'
-				},
-				'/option': {}
-			}) + renderSelectOpt (options) + renderAttributeWithHtmlTag ({
-				'/select': {},
-				'/div': {}
-			});
+			innerContent += renderAttributeWithHtmlTag ('div', {
+				className: 'field-control'
+			}, renderAttributeWithHtmlTag ('select', {
+				id: name,
+				name: name
+			}, renderAttributeWithHtmlTag ('option', {
+				value: ''
+			}, '-please select-') + renderSelectOpt (options)));
 		}
 		if (field === "Radio") {
-			content += renderAttributeWithHtmlTag ({
-				div: {
-					classUpd: 'col'
-				}
-			}) + renderRadioOpt (name, options) + renderAttributeWithHtmlTag ({
-				'/div': {}
-			});
+			innerContent += renderAttributeWithHtmlTag ('div', {
+				className: 'col'
+			}, renderRadioOpt (name, options));
 		}
 		if (field === "Textarea") {
-			content += renderAttributeWithHtmlTag ({
-				div: {
-					classUpd: 'field-control'
-				},
-				textarea: {
-					cols: '3',
-					rows: '3',
-					id: name,
-					name: name
-				},
-				'/textarea': {},
-				'/div': {}
-			});
+			innerContent += renderAttributeWithHtmlTag ('div', {
+				className: 'field-control'
+			}, renderAttributeWithHtmlTag ('textarea', {
+				cols: '3',
+				rows: '3',
+				id: name,
+				name: name
+			}, ''));
 		}
 	}
-	content += renderAttributeWithHtmlTag ({
-		'/div': {}
-	});
+	content += renderAttributeWithHtmlTag ('div', {
+			className: 'field-row'
+		}, innerContent);
 	return content;
 }
 
 function jsonQuestions (dataForm) {
 	var domContent = '';
-	domContent += renderAttributeWithHtmlTag ({
-		form: {
-			classUpd: 'application-form',
-			action: '#'
-		},
-		fieldset: {}
-	});
+	var questionsContent = '';
 	if (dataForm.questions) {
 		for (var i = 0; i < dataForm.questions.length; i++) {
-			domContent += renderHTML (dataForm.questions[i]);
+			questionsContent += renderHTML (dataForm.questions[i]);
 		}
-		domContent += renderAttributeWithHtmlTag ({
-			div: {
-				classUpd: 'btn-block'
-			},
-			input: {
-				type: 'submit',
-				value: 'Submit',
-				classUpd: 'btn-submit'
-			},
-			'/div': {},
-			'/fieldset': {},
-			'/form': {}
-		});
+		questionsContent += renderAttributeWithHtmlTag ('div', {
+			className: 'btn-block'
+		}, renderAttributeWithHtmlTag ('input', {
+			type: 'submit',
+			value: 'Submit',
+			className: 'btn-submit'
+		}, ''));
+	}
+	domContent += renderAttributeWithHtmlTag ('form', {
+		className: 'application-form',
+		action: '#'
+	}, renderAttributeWithHtmlTag ('fieldset', {}, questionsContent));
+
+	if (dataForm.questions) {
 		displayDomContent ('content', domContent);
 	}
 }
