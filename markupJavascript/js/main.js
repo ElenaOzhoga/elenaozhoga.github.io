@@ -146,6 +146,7 @@ function jsonQuestions (dataForm) {
 	var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
 	var xhr = new XHR();
 	xhr.open('GET', 'http://xys.uk.to/task-form/api/', true);
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhr.onload = function() {
 		alert( this.responseText );
 	}
