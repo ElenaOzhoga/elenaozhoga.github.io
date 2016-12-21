@@ -9,7 +9,7 @@ function renderAttributeWithHtmlTag (tagName, obj, tagContent) {
 		tagWithAttributes += (key === 'className' ? ' class' : ' ' + key) + '="' + obj[key] + '"';
 	}
 	tagWithAttributes += (tagName === 'input' ? '/>' : '>');
-	tagWithAttributes += tagContent;
+	tagWithAttributes += (tagContent !== undefined ? tagContent : '');
 	tagWithAttributes += (tagName === 'input' ? '' : '</' + tagName + '>');
 	return tagWithAttributes;
 }
@@ -74,8 +74,8 @@ function renderHTML (question) {
 			for: name
 		}, labelQ) + renderRequired (required));
 	}
-	if (field) {
-		if (field === "Text") {
+	switch (field) {
+		case "Text":
 			innerContent += renderAttributeWithHtmlTag ('div', {
 				className: 'field-control'
 			}, renderAttributeWithHtmlTag ('input', {
@@ -83,9 +83,9 @@ function renderHTML (question) {
 				className: 'text-input',
 				id: name,
 				name: name
-			}, ''));
-		}
-		if (field === "Select") {
+			}));
+			break;
+		case "Select":
 			innerContent += renderAttributeWithHtmlTag ('div', {
 				className: 'field-control'
 			}, renderAttributeWithHtmlTag ('select', {
@@ -94,13 +94,13 @@ function renderHTML (question) {
 			}, renderAttributeWithHtmlTag ('option', {
 				value: ''
 			}, '-please select-') + renderSelectOpt (options)));
-		}
-		if (field === "Radio") {
+			break;
+		case "Radio":
 			innerContent += renderAttributeWithHtmlTag ('div', {
 				className: 'col'
 			}, renderRadioOpt (name, options));
-		}
-		if (field === "Textarea") {
+			break;
+		case "Textarea":
 			innerContent += renderAttributeWithHtmlTag ('div', {
 				className: 'field-control'
 			}, renderAttributeWithHtmlTag ('textarea', {
@@ -108,8 +108,7 @@ function renderHTML (question) {
 				rows: '3',
 				id: name,
 				name: name
-			}, ''));
-		}
+			}));
 	}
 	content += renderAttributeWithHtmlTag ('div', {
 			className: 'field-row'
@@ -130,21 +129,29 @@ function jsonQuestions (dataForm) {
 			type: 'submit',
 			value: 'Submit',
 			className: 'btn-submit'
-		}, ''));
-	}
-	domContent += renderAttributeWithHtmlTag ('form', {
-		className: 'application-form',
-		action: '#'
-	}, renderAttributeWithHtmlTag ('fieldset', {}, questionsContent));
-
-	if (dataForm.questions) {
+		}));
+		domContent += renderAttributeWithHtmlTag ('form', {
+			className: 'application-form',
+			action: '#'
+		}, renderAttributeWithHtmlTag ('fieldset', {}, questionsContent));
 		displayDomContent ('content', domContent);
 	}
 }
 
 (function () {
-	var dataForm = restAPI.form;
+	/*var dataForm = restAPI.form;
 	if (dataForm) {
 		jsonQuestions (dataForm);
+	}*/
+	var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
+	var xhr = new XHR();
+	xhr.open('GET', 'http://xys.uk.to/task-form/api/', true);
+	xhr.onload = function() {
+		alert( this.responseText );
 	}
+	xhr.onerror = function() {
+		alert( '?????? ' + this.status );
+	}
+
+	xhr.send();
 })();
