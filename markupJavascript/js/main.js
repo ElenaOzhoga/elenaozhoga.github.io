@@ -149,7 +149,7 @@ function jsonQuestions (dataForm) {
 	xhr.open('GET', 'http://xys.uk.to/task-form/api/?callback', true);
 	xhr.onload = function() {
 		data = this.responseText;
-		alert( data );
+		alert( this.responseText );
 		dataForm = data.form;
 		jsonQuestions (dataForm);
 		alert( dataForm );
