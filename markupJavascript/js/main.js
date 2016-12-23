@@ -147,9 +147,10 @@ function jsonQuestions (dataForm) {
 	var xhr = new XHR();
 	xhr.open('GET', 'http://xys.uk.to/task-form/api/?callback', true);
 	xhr.onload = function() {
-
-		jsonQuestions (this.responseText);
-		alert( this.responseText.form );
+		var data = this.responseText;
+		var dataForm = data.form;
+		jsonQuestions (dataForm);
+		alert( dataForm );
 	}
 	xhr.onerror = function() {
 		alert( '?????? ' + this.status );
