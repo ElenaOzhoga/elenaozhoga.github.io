@@ -143,12 +143,13 @@ function jsonQuestions (dataForm) {
 	if (dataForm) {
 		jsonQuestions (dataForm);
 	}*/
+	var data, dataForm;
 	var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
 	var xhr = new XHR();
 	xhr.open('GET', 'http://xys.uk.to/task-form/api/?callback', true);
 	xhr.onload = function() {
-		var data = this.responseText;
-		var dataForm = data.form;
+		data = this.responseText;
+		dataForm = data.form;
 		jsonQuestions (dataForm);
 		alert( dataForm );
 	}
