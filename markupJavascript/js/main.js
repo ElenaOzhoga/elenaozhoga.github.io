@@ -139,24 +139,17 @@ function jsonQuestions (dataForm) {
 }
 
 (function () {
-	/*var dataForm = restAPI.form;
-	if (dataForm) {
-		jsonQuestions (dataForm);
-	}*/
 	var data, dataForm;
 	var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
 	var xhr = new XHR();
 	xhr.open('GET', 'http://xys.uk.to/task-form/api/?callback', true);
 	xhr.onload = function() {
 		data = this.responseText;
-		alert( this.responseText );
-		dataForm = data.form;
-		jsonQuestions (dataForm);
-		alert( dataForm );
+		dataForm = JSON.parse(data);
+		jsonQuestions (dataForm["form"]);
 	}
 	xhr.onerror = function() {
-		alert( '?????? ' + this.status );
+		alert( 'Oh-wei!!! Something went wrong!!! ' + this.status );
 	}
-
 	xhr.send();
 })();
