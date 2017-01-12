@@ -138,18 +138,15 @@ function jsonQuestions (dataForm) {
 	}
 }
 
-(function () {
-	var data, dataForm;
+(function() {
+	var data, dataForm, dataJSON;
 	var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
 	var xhr = new XHR();
-	xhr.open('GET', 'http://xys.uk.to/task-form/api/?callback', true);
+	xhr.open('GET', 'http://xys.uk.to/task-form/api/?callback=functionName', true);
 	xhr.onload = function() {
-		if ('XDomainRequest' in window && window.XDomainRequest !== null) {
-			var dom  = new ActiveXObject('Microsoft.XMLDOM');
-			dom.async = false;
-		}
 		data = this.responseText;
-		dataForm = JSON.parse(data);
+		dataJSON = data.substring(data.indexOf("(") + 1, data.lastIndexOf(")"));
+		dataForm = JSON.parse(dataJSON);
 		jsonQuestions (dataForm["form"]);
 	}
 	xhr.onerror = function() {
