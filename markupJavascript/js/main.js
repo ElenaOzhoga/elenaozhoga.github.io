@@ -142,11 +142,12 @@ function jsonQuestions (dataForm) {
 	var data, dataForm, dataJSON;
 	var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
 	var xhr = new XHR();
-	xhr.open('GET', 'http://xys.uk.to/task-form/api/?callback=functionName', true);
+	//xhr.open('GET', 'http://xys.uk.to/task-form/api/?callback=functionName', true);
+	xhr.open('GET', 'http://xys.uk.to/task-form/api/?callback', true);
 	xhr.onload = function() {
 		data = this.responseText;
-		dataJSON = data.substring(data.indexOf("(") + 1, data.lastIndexOf(")"));
-		dataForm = JSON.parse(dataJSON);
+		//dataJSON = data.substring(data.indexOf("(") + 1, data.lastIndexOf(")"));
+		dataForm = JSON.parse(data);
 		jsonQuestions (dataForm["form"]);
 	}
 	xhr.onerror = function() {
