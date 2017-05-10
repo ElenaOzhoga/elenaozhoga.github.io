@@ -139,19 +139,20 @@ function jsonQuestions (dataForm) {
 }
 
 (function() {
-	var data, dataForm, dataJSON;
-	var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
-	var xhr = new XHR();
-	//xhr.open('GET', 'http://xys.uk.to/task-form/api/?callback=functionName', true);
-	xhr.open('GET', 'http://xys.uk.to/task-form/api/?callback', true);
-	xhr.onload = function() {
-		data = this.responseText;
-		//dataJSON = data.substring(data.indexOf("(") + 1, data.lastIndexOf(")"));
-		dataForm = JSON.parse(data);
-		jsonQuestions (dataForm["form"]);
+	function jsonp(url, callback) {
+		var callbackName = 'jsonp_callback_';
+		window[callbackName] = function(data) {
+			delete window[callbackName];
+			document.body.removeChild(script);
+			callback(data);
+		};
+
+		var script = document.createElement('script');
+		script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+		document.body.appendChild(script);
 	}
-	xhr.onerror = function() {
-		alert( 'Oh-wei!!! Something went wrong!!! ' + this.status );
-	}
-	xhr.send();
+
+	jsonp('http://xys.uk.to/task-form/api/', function(data) {
+		return jsonQuestions (data.form);
+	});
 })();
