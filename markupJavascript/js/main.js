@@ -152,7 +152,7 @@ function jsonQuestions (dataForm) {
 		document.body.appendChild(script);
 	}
 
-	jsonp('http://xys.uk.to/task-form/api/', function(data) {
+	jsonp('//xys.uk.to/task-form/api/', function(data) {
 		return (data.status === "Success" ? jsonQuestions (data.form) : document.getElementById("content").innerHTML +=
 			renderAttributeWithHtmlTag ('div', {
 				className: 'field-row'
