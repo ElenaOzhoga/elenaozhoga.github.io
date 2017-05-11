@@ -30,7 +30,7 @@ input, select, textarea {
 	padding:31px 0 0;
 }
 .application-form{overflow:hidden;}
-.application-form .field-row{
+.field-row{
 	overflow:hidden;
 	margin:0 0 13px;
 	padding:0 30px;
